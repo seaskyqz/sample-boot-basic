@@ -24,6 +24,7 @@ public class SaleOrder {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    private String notes;
     private LocalDate orderDate;
     
     @ManyToOne
@@ -64,6 +65,12 @@ public class SaleOrder {
     }
     public void setProducts(List<Product> products) {
         this.products = products;
+    }
+    public String getNotes() {
+        return notes;
+    }
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
 
