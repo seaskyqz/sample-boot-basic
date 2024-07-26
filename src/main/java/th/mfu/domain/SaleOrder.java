@@ -1,4 +1,4 @@
-package th.mfu;
+package th.mfu.domain;
 
 import java.time.LocalDate;
 import java.util.List;
