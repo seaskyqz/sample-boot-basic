@@ -10,19 +10,16 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import th.mfu.domain.SaleOrder;
-import th.mfu.dto.CustomerDTO;
 import th.mfu.dto.SaleOrderDTO;
 
-@Mapper(componentModel = "spring", uses = { CustomerMapper.class })
+@Mapper(componentModel = "spring")
 public interface SaleOrderMapper {
 
     // Map from DTO to Entity
-    @Mapping(target = "customer", source = "customer")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public void updateSaleOrderFromDto(SaleOrderDTO dto, @MappingTarget SaleOrder entity);
 
     // Map from Entity to DTO
-    @Mapping(target = "customer", source = "customer")
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public void updateSaleOrderFromEntity(Collection<SaleOrder> orders, @MappingTarget List<SaleOrderDTO> dtos);
 
