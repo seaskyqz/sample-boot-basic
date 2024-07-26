@@ -7,6 +7,13 @@ public class SaleOrderDTO {
     private Long id;
     private String notes;
     private CustomerDTO customer;
+    private List<ProductDTO> products;
+    public List<ProductDTO> getProducts() {
+        return products;
+    }
+    public void setProducts(List<ProductDTO> products) {
+        this.products = products;
+    }    
     public Long getId() {
         return id;
     }
