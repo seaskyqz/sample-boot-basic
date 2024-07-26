@@ -62,7 +62,7 @@ public class SaleOrderController {
      if (!optCustomer.isPresent()) {
          return new ResponseEntity<Collection<SaleOrderDTO>>(HttpStatus.NOT_FOUND);
      }
-     System.out.println(optCustomer.get().getSaleOrders().size());
+    //  System.out.println(optCustomer.get().getSaleOrders().size());
      Collection<SaleOrder> orders = orderRepo.findByCustomerId(customerId);
      List<SaleOrderDTO> dtos = new ArrayList<>();
      saleOrderMapper.updateSaleOrderFromEntity(orders, dtos);
