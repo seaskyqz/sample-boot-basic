@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-refresh {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+
+        .customers-section {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .customers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .customers-header h2 {
+            color: #2d3748;
+            font-size: 1.5rem;
+        }
+
+        .customer-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .customer-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .customer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .customer-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .customer-field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .customer-field .label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .customer-field .value {
+            font-size: 16px;
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        .customer-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+            font-size: 18px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c53030;
+        }
+
+        .success {
+            background: #f0fff4;
+            color: #276749;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #48bb78;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .customer-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Customer Management System</h1>
+            <p>Manage your customers with ease</p>
+        </div>
+        
+        <div class="content">
+            <!-- Add Customer Form -->
+            <div class="form-section">
+                <h2>Add New Customer</h2>
+                <form id="customerForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullname">Full Name</label>
+                            <input type="text" id="fullname" name="fullname" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="tel">Phone</label>
+                            <input type="tel" id="tel" name="tel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="birthday">Birthday</label>
+                            <input type="date" id="birthday" name="birthday" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" name="address" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span>Add Customer</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Messages -->
+            <div id="messages"></div>
+
+            <!-- Customers List -->
+            <div class="customers-section">
+                <div class="customers-header">
+                    <h2>Customer List</h2>
+                    <button id="refreshBtn" class="btn btn-refresh">
+                        <span>Refresh</span>
+                    </button>
+                </div>
+                <div id="customersList">
+                    <div class="loading">Loading customers...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080';
+        
+        // DOM Elements
+        const customerForm = document.getElementById('customerForm');
+        const customersList = document.getElementById('customersList');
+        const messagesDiv = document.getElementById('messages');
+        const refreshBtn = document.getElementById('refreshBtn');
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCustomers();
+            
+            customerForm.addEventListener('submit', handleAddCustomer);
+            refreshBtn.addEventListener('click', loadCustomers);
+        });
+
+        // Show message to user
+        function showMessage(message, type = 'success') {
+            const messageEl = document.createElement('div');
+            messageEl.className = type;
+            messageEl.textContent = message;
+            
+            messagesDiv.innerHTML = '';
+            messagesDiv.appendChild(messageEl);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                messageEl.remove();
+            }, 5000);
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            return date.toLocaleDateString();
+        }
+
+        // Convert date from input format to API format (DD-MM-YYYY)
+        function formatDateForAPI(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+
+        // Load all customers
+        async function loadCustomers() {
+            try {
+                customersList.innerHTML = '<div class="loading">Loading customers...</div>';
+                
+                const response = await fetch(`${API_BASE_URL}/customers`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const customers = await response.json();
+                displayCustomers(customers);
+                
+            } catch (error) {
+                console.error('Error loading customers:', error);
+                customersList.innerHTML = `
+                    <div class="error">
+                        Error loading customers: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Display customers in the UI
+        function displayCustomers(customers) {
+            if (!customers || customers.length === 0) {
+                customersList.innerHTML = `
+                    <div class="empty-state">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        <h3>No customers found</h3>
+                        <p>Add your first customer using the form above.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const customerCards = customers.map(customer => `
+                <div class="customer-card">
+                    <div class="customer-info">
+                        <div class="customer-field">
+                            <span class="label">Full Name</span>
+                            <span class="value">${customer.fullname || 'N/A'}</span>
+                        </div>
+                        <div class="customer-field">
+                            <span class="label">Email</span>
+                            <span class="value">${customer.email || 'N/A'}</span>
+                        </div>
+                        <div class="customer-field">
+                            <span class="label">Phone</span>
+                            <span class="value">${customer.tel || 'N/A'}</span>
+                        </div>
+                        <div class="customer-field">
+                            <span class="label">Birthday</span>
+                            <span class="value">${formatDate(customer.birthday)}</span>
+                        </div>
+                        <div class="customer-field" style="grid-column: 1 / -1;">
+                            <span class="label">Address</span>
+                            <span class="value">${customer.address || 'N/A'}</span>
+                        </div>
+                    </div>
+                    <div class="customer-actions">
+                        <button class="btn btn-danger" onclick="deleteCustomer(${customer.id})">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            customersList.innerHTML = `<div class="customer-grid">${customerCards}</div>`;
+        }
+
+        // Handle add customer form submission
+        async function handleAddCustomer(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(customerForm);
+            const customerData = {
+                fullname: formData.get('fullname'),
+                address: formData.get('address'),
+                email: formData.get('email'),
+                tel: formData.get('tel'),
+                birthday: formatDateForAPI(formData.get('birthday'))
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(customerData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                showMessage('Customer added successfully!');
+                customerForm.reset();
+                loadCustomers();
+
+            } catch (error) {
+                console.error('Error adding customer:', error);
+                showMessage(`Error adding customer: ${error.message}`, 'error');
+            }
+        }
+
+        // Delete customer
+        async function deleteCustomer(customerId) {
+            if (!confirm('Are you sure you want to delete this customer?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/customers/${customerId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                showMessage('Customer deleted successfully!');
+                loadCustomers();
+
+            } catch (error) {
+                console.error('Error deleting customer:', error);
+                showMessage(`Error deleting customer: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
